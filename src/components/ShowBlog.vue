@@ -12,6 +12,7 @@
 </template>
 
 <script>
+	import axios from '../axios-auth.js'
 	export default{
 		name:'show-blog',
 		data(){
@@ -21,14 +22,15 @@
 			}
 		},
 		created(){
-			this.$http.get("https://wd4168068279tyatty.wilddogio.com/posts.json")
+			// this.$http.get("https://wd4168068279tyatty.wilddogio.com/posts.json")
+			axios.get("/posts.json")
 			.then(function(data){
-				return data.json();
+				//return data.json();
 				//console.log(data.json());				
 				//this.blogs = data.body.slice(0,10);
-				//console.log(this.blogs);
+				return data.data;
 			})
-			.then(function(data){
+			.then((data) =>{
 				var blogsArray = [];
 				for(let key in data){
 					//console.log(key);

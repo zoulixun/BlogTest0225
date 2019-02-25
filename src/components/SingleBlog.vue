@@ -9,10 +9,13 @@
 				{{category}}
 			</li>
 		</ul>
+		<button @click="deleteSingleBlog()">删除</button>
+		<router-link :to="'/edit/' + id">编辑</router-link>
 	</div>
 </template>
 
 <script>
+	import axios from '../axios-auth.js'
 	export default{
 		name:"single-blog",
 		data(){
@@ -22,20 +25,27 @@
 			}
 		},
 		created(){
-			this.$http.get("https://wd4168068279tyatty.wilddogio.com/posts/" + this.id +".json")
-			.then(function(data){
-				console.log(data);
-				return data.json();
+			// this.$http.get("https://wd4168068279tyatty.wilddogio.com/posts/" + this.id +".json")
+			axios.get("/posts/" + this.id +".json")
+			.then((data) =>{
+				//console.log(data);
+				this.blog = data.data;
 				//this.blog = data.body;
 			})
-			.then(function(data){
-				this.blog = data;
-			})
+
+		},
+		methods: {
+			deleteSingleBlog:function(){
+				axios.delete("/posts/" + this.id +".json")
+				.then(response =>{
+					this.$router.push({path:'/'})
+				})
+			}
 		}
 	}
 </script>
 
-<style>
+<style scoped>
 	#single-blog{
 		max-width: 960px;
 		margin: 0 auto;

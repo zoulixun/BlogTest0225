@@ -1,6 +1,6 @@
 <template>
 	<div id="add-blog">
-		<h2>添加博客</h2>
+		<h2>编辑博客</h2>
 		<form v-if="!submited" action="">
 			<label>博客标题</label>
 			<input type="text" v-model="blog.title" required="">
@@ -22,11 +22,10 @@
 					{{author}}
 				</option>			
 			</select>
-			<button v-on:click.prevent="post">添加博客</button>
+			<button v-on:click.prevent="post">编辑完成</button>
 		</form>	
 		<div v-if="submited">
 			<h3>发布成功</h3>
-			<router-link to="/"><h3>返回首页</h3></router-link>
 		</div>
 	<hr>
 	<div id="preview">
@@ -46,32 +45,38 @@
 	</div>
 </template>
 <script>
-	import axios from '../axios-auth.js'
+import axios from '../axios-auth.js'
 export default { 
-	//http://jsonplaceholder.typicode.com/
-	//http://jsonplaceholder.typicode.com/posts
   name: 'add-bolg',
   data(){
 	  return {
-		 blog:{
-			 title:"",
-			 content:"",
-			 categories:[],
-			 author:""
-		 },
+		  id:this.$route.params.id,
+		  blog:{},
 		  authors:["Hemiah","Bucky","James"],
 		  submited:false
 	  }
   },
   methods:{
 	  post:function(){
-		  //this.$http.post("https://wd4168068279tyatty.wilddogio.com/posts.json",this.blog)
-			axios.post("/posts.json",this.blog)
+		  //this.$http.put("https://wd4168068279tyatty.wilddogio.com/posts/" + this.id +".json",this.blog)
+		  axios.put("/posts/" + this.id +".json",this.blog)
 				.then((data) =>{
-					console.log(data);
+					//console.log(data);
 					this.submited = true;
 				})
+	  },
+	  fetchData:function(){
+		  //console.log(this.id);
+		  // this.$http.get("https://wd4168068279tyatty.wilddogio.com/posts/" + this.id +".json")
+		  axios.get("/posts/" + this.id +".json")
+		  .then((data) =>{
+			  //console.log(response.body);
+			  this.blog = data.data;
+		  })
 	  }
+  },
+  created(){
+	  this.fetchData()
   }
 }
 </script>
